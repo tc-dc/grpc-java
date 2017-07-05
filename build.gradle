@@ -47,7 +47,7 @@ subprojects {
     idea.module.inheritOutputDirs = true
 
     group = "io.grpc"
-    version = "1.6.1" // CURRENT_GRPC_VERSION
+    version = "1.6.1-twttr1" // CURRENT_GRPC_VERSION
 
     sourceCompatibility = 1.6
     targetCompatibility = 1.6
@@ -281,7 +281,7 @@ subprojects {
           stagingUrl = 'https://oss.sonatype.org/service/local/staging/deployByRepositoryId/' +
               rootProject.repositoryId
         } else {
-          stagingUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+          stagingUrl = 'https://artifactory.twitter.biz:443/libs-releases-local/'
         }
         def configureAuth = {
           if (rootProject.hasProperty('ossrhUsername') && rootProject.hasProperty('ossrhPassword')) {
