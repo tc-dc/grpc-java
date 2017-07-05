@@ -42,7 +42,9 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.ssl.SslContext;
+import java.net.Authenticator;
 import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
 import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -366,7 +368,24 @@ public final class NettyChannelBuilder
         port = Integer.parseInt(parts[1]);
       }
       InetSocketAddress proxyAddress = new InetSocketAddress(parts[0], port);
-      negotiator = ProtocolNegotiators.httpProxy(proxyAddress, null, null, negotiator);
+      PasswordAuthentication auth = Authenticator.requestPasswordAuthentication(
+          parts[0],
+          null,
+          port,
+          null,
+          null,
+          null,
+          null,
+          Authenticator.RequestorType.PROXY
+      );
+      String proxyUsername = null;
+      String proxyPassword = null;
+      if (auth != null) {
+        proxyUsername = auth.getUserName();
+        proxyPassword = new String(auth.getPassword());
+      }
+      negotiator =
+          ProtocolNegotiators.httpProxy(proxyAddress, proxyUsername, proxyPassword, negotiator);
     }
     return negotiator;
   }
